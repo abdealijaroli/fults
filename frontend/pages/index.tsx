@@ -1,6 +1,16 @@
 import type { NextPage } from "next";
 import { useEffect, useState } from "react";
-import { Center, TextInput, Stack, Button, List } from "@mantine/core";
+import {
+  Center,
+  TextInput,
+  Stack,
+  Button,
+  List,
+  Notification,
+  Group,
+} from "@mantine/core";
+import { Check } from "tabler-icons-react";
+import { showNotification } from "@mantine/notifications";
 
 const Home: NextPage = () => {
   const [value, setValue] = useState("");
@@ -35,6 +45,14 @@ const Home: NextPage = () => {
       console.log(error);
     }
   };
+
+  //   function successNotification() {
+  //     return (
+  //       <>
+  //         <h1></h1>
+  //       </>
+  //     );
+  //   }
 
   return (
     <Center>
