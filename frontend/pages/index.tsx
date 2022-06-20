@@ -67,7 +67,7 @@ const Home: NextPage = () => {
         <Button size="sm" onClick={addTask}>
           Add
         </Button>
-        <h3>Existing tasks:</h3>
+        <h3>Existing tasks:</h3> 
         <List spacing="xs" size="sm" center>
           {tasks.map((task) => (
             <List.Item key={task["_id"]}>{task["content"]}</List.Item>
