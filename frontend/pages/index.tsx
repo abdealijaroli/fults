@@ -4,12 +4,36 @@ import { Center, TextInput, Stack, Button, List } from "@mantine/core";
 
 const Home: NextPage = () => {
   const [value, setValue] = useState("");
-  const [tasks, setTasks] = useState({});
+  const [tasks, setTasks] = useState([]);
 
-  const fetchTasks = async () => {
-    const data = await fetch(`http://localhost:5000/api/v1/fults/getTasks`);
-    const res = await data.json();
-    setTasks(res);
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const data = await fetch(`http://localhost:5000/api/v1/fults/getTasks`);
+        const res = await data.json();
+        setTasks(res);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchTasks();
+  }, []);
+
+  const addTask = async () => {
+    try {
+      const data = await fetch(
+        `http://localhost:5000/api/v1/fults/createTask`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content: value, completed: false }),
+        }
+      );
+      const res = await data.json();
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -22,19 +46,14 @@ const Home: NextPage = () => {
           value={value}
           onChange={(e) => setValue(e.currentTarget.value)}
         />
-        <Button size="sm">Add</Button>
-        <Button size="sm" onClick={fetchTasks}>
-          Fetch existing tasks
+        <Button size="sm" onClick={addTask}>
+          Add
         </Button>
-
+        <h3>Existing tasks:</h3>
         <List spacing="xs" size="sm" center>
-          {
-            Object.keys(tasks).map((task) => (
-               <List.Item >{task.map((t) => {
-                  return t.content
-               })}</List.Item>
-            ))
-          }
+          {tasks.map((task) => (
+            <List.Item key={task["_id"]}>{task["content"]}</List.Item>
+          ))}
         </List>
       </Stack>
     </Center>
