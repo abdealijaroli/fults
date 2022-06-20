@@ -1,20 +1,16 @@
 import type { NextPage } from "next";
-import { useState } from "react";
-import Head from "next/head";
-import Image from "next/image";
-import {
-  Center,
-  TextInput,
-  Stack,
-  Button,
-  List,
-  ThemeIcon,
-  Checkbox,
-} from "@mantine/core";
-import { CircleCheck, CircleDashed } from "tabler-icons-react";
+import { useEffect, useState } from "react";
+import { Center, TextInput, Stack, Button, List } from "@mantine/core";
 
 const Home: NextPage = () => {
-  const [value, setValue] = useState<string>("");
+  const [value, setValue] = useState("");
+  const [tasks, setTasks] = useState({});
+
+  const fetchTasks = async () => {
+    const data = await fetch(`http://localhost:5000/api/v1/fults/getTasks`);
+    const res = await data.json();
+    setTasks(res);
+  };
 
   return (
     <Center>
@@ -27,17 +23,18 @@ const Home: NextPage = () => {
           onChange={(e) => setValue(e.currentTarget.value)}
         />
         <Button size="sm">Add</Button>
+        <Button size="sm" onClick={fetchTasks}>
+          Fetch existing tasks
+        </Button>
 
         <List spacing="xs" size="sm" center>
-          <h4>Clone or download repository from GitHub</h4>
-          <h4>Install dependencies with yarn</h4>
-          <h4>
-            To start development server run npm start command
-          </h4>
-          <h4>Download
-            Run tests to make sure your changes do not break the build
-          </h4>
-          <h4>Submit a pull request once you are done</h4>
+          {
+            Object.keys(tasks).map((task) => (
+               <List.Item >{task.map((t) => {
+                  return t.content
+               })}</List.Item>
+            ))
+          }
         </List>
       </Stack>
     </Center>
